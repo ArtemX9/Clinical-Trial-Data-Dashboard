@@ -181,8 +181,6 @@ Chart components (`@/components/charts/`) are the only consumers of Recharts. Pa
 
 - **SQLModel vs separate SQLAlchemy + Pydantic schemas** — SQLModel reduces boilerplate significantly for this model count. At scale (20+ models with complex relationships), separate schemas give more control.
 - **RTK Query vs React Query + Zustand** — RTK Query adds more boilerplate but is the right call if the app grows and needs complex cross-slice invalidation. For a 3-page app, React Query would be lighter.
-- **In-memory auth state** — token is not persisted to `localStorage`. Refresh loses the session. Intentional for a challenge: persistent auth would use an httpOnly cookie set by the API.
-
 ---
 
 ## AI Tools Used
