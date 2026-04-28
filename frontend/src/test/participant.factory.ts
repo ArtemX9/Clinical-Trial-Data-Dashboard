@@ -21,6 +21,7 @@ export function generateParticipant(overrides?: IGenerateParticipant): Participa
 }
 
 export function generateCreateParticipantDto(overrides?: IGenerateParticipant): CreateParticipantDto {
+  //  @typescript-eslint/no-unused-vars
   const { participant_id: _, ...rest } = generateParticipant(overrides);
   return rest;
 }

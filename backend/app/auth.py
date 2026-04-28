@@ -44,7 +44,7 @@ def get_current_user(
             raise credentials_exception
     except JWTError:
         logger.warning("Invalid JWT cookie attempt")
-        raise credentials_exception
+        raise credentials_exception from None
 
     user = get_user_by_username(session, username)
     if user is None:
