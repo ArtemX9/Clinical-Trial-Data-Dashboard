@@ -4,6 +4,7 @@ from app.tests.factories import generate_create_participant_dto, generate_partic
 
 # --- Auth guard tests ---
 
+
 def test_list_participants_no_token(client: TestClient):
     response = client.get("/api/participants")
     assert response.status_code == 401
@@ -21,6 +22,7 @@ def test_create_participant_no_token(client: TestClient):
 
 
 # --- Happy path tests ---
+
 
 def test_list_participants_authenticated(client: TestClient, auth_headers: dict):
     response = client.get("/api/participants", headers=auth_headers)
@@ -60,6 +62,7 @@ def test_get_participant_not_found(client: TestClient, auth_headers: dict):
 
 
 # --- Validation: negative scenarios ---
+
 
 def test_create_participant_missing_required_field(client: TestClient, auth_headers: dict):
     dto = generate_create_participant_dto()

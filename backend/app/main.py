@@ -42,10 +42,7 @@ app.include_router(participants_router)
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
-    errors = [
-        {"field": str(err["loc"][-1]) if err["loc"] else "unknown", "error": err["msg"]}
-        for err in exc.errors()
-    ]
+    errors = [{"field": str(err["loc"][-1]) if err["loc"] else "unknown", "error": err["msg"]} for err in exc.errors()]
     return JSONResponse(status_code=422, content={"detail": errors})
 
 

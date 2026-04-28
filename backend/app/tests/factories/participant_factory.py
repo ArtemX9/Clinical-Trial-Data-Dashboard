@@ -24,9 +24,7 @@ def generate_create_participant_dto(**overrides) -> ParticipantCreate:
     return ParticipantCreate(
         subject_id=overrides.get("subject_id", _next_subject_id()),
         study_group=overrides.get("study_group", random.choice(STUDY_GROUPS)),
-        enrollment_date=overrides.get(
-            "enrollment_date", faker.date_between(start_date="-1y", end_date="today").isoformat()
-        ),
+        enrollment_date=overrides.get("enrollment_date", faker.date_between(start_date="-1y", end_date="today").isoformat()),
         status=overrides.get("status", random.choice(STATUSES)),
         age=overrides.get("age", faker.random_int(min=18, max=80)),
         gender=overrides.get("gender", random.choice(GENDERS)),
