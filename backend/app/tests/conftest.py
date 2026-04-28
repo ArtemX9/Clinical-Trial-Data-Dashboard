@@ -3,8 +3,8 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from app.main import app
 from app.database import get_session
+from app.main import app
 from app.repositories.participant_repository import create_user
 from app.services.auth_service import hash_password
 

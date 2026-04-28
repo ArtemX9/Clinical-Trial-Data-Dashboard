@@ -1,6 +1,5 @@
 import random
 import uuid
-from datetime import date
 
 from faker import Faker
 

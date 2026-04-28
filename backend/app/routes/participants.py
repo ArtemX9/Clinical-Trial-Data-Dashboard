@@ -5,7 +5,11 @@ from app.auth import get_current_user
 from app.database import get_session
 from app.models import User
 from app.schemas import FieldError, ParticipantCreate, ParticipantResponse
-from app.services.participant_service import add_participant, fetch_all_participants, fetch_participant
+from app.services.participant_service import (
+    add_participant,
+    fetch_all_participants,
+    fetch_participant,
+)
 
 router = APIRouter(prefix="/api/participants", tags=["participants"])
 

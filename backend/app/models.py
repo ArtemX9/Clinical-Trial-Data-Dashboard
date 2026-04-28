@@ -1,7 +1,6 @@
 import uuid
 from datetime import date
 from enum import Enum
-from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
@@ -41,6 +40,6 @@ class Participant(SQLModel, table=True):
 class User(SQLModel, table=True):
     __tablename__ = "users"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     username: str = Field(unique=True, index=True)
     hashed_password: str

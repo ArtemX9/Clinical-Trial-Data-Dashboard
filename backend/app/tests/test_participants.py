@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 
 from app.tests.factories import generate_create_participant_dto, generate_participant_dict
 
-
 # --- Auth guard tests ---
 
 def test_list_participants_no_token(client: TestClient):
