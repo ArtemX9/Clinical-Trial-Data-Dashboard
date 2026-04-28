@@ -20,9 +20,7 @@ export function generateParticipant(overrides?: IGenerateParticipant): Participa
   };
 }
 
-export function generateCreateParticipantDto(
-  overrides?: IGenerateParticipant,
-): CreateParticipantDto {
+export function generateCreateParticipantDto(overrides?: IGenerateParticipant): CreateParticipantDto {
   const { participant_id: _, ...rest } = generateParticipant(overrides);
   return rest;
 }

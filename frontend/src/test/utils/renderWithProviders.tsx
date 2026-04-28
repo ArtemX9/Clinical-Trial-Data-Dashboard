@@ -1,9 +1,8 @@
-import { type ReactElement } from 'react';
-
+import { configureStore } from '@reduxjs/toolkit';
 import { render } from '@testing-library/react';
+import { type ReactElement } from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
 
 import { api } from '@/api/api';
 import authReducer from '@/store/authSlice';
