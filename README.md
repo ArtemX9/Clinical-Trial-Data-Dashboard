@@ -1,4 +1,5 @@
 # Clinical Trial Dashboard
+[![CI](https://github.com/ArtemX9/Clinical-Trial-Data-Dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/ArtemX9/Clinical-Trial-Data-Dashboard/actions/workflows/ci.yml)
 
 Full stack application for visualizing and managing clinical trial participant data.
 
