@@ -8,7 +8,11 @@ Full stack application for visualizing and managing clinical trial participant d
 ## Quick Start
 
 ### Run with Docker (recommended)
-
+Using `make`
+```bash
+make dev
+```
+or explicitly
 ```bash
 docker compose up --build
 ```
@@ -43,14 +47,12 @@ VITE_API_URL=http://localhost:8000 npm run dev
 
 **Backend:**
 ```bash
-cd backend
-pytest -v
+make test-be
 ```
 
 **Frontend:**
 ```bash
-cd frontend
-npm run test
+make test-fe
 ```
 
 **Both via Makefile:**
