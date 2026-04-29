@@ -123,6 +123,16 @@ repositories/   — all DB access lives here exclusively; nothing else queries t
 PostgreSQL
 ```
 
+```mermaid
+graph TD
+  Presentation[Presentation Component] --> Container[Container Wrapper]
+  Container --> Redux_RTK[RTK Query]
+  Redux_RTK --> API[FastAPI]
+  API --> Service[Services Layer]
+  Service --> Repo[Repositories]
+  Repo --> DB[(PostgreSQL)]
+```
+
 No route accesses the DB directly. No service imports SQLAlchemy directly. This makes services independently testable and the DB implementation swappable.
 
 ### Frontend: Container / Presentational split
@@ -139,7 +149,7 @@ Chart components (`@/components/charts/`) are the only consumers of Recharts. Pa
 ## What's Implemented
 
 - [x] FastAPI backend with full CRUD (Create, Read All, Read One)
-- [x] JWT authentication with seeded admin user
+- [x] Secure cookie-based authentication using JWT (httpOnly cookie) with seeded admin user
 - [x] Route → Service → Repository layering (no DB calls in routes)
 - [x] Input validation via Pydantic (backend) and Zod (frontend)
 - [x] React frontend: Login, Participants list, Add Participant form, Metrics dashboard
@@ -154,13 +164,14 @@ Chart components (`@/components/charts/`) are the only consumers of Recharts. Pa
 
 ## What's Skipped (and why)
 
-| Feature | Reason |
-|---|---|
-| Update/Delete participant | Deprioritized — adds ~30min for low evaluation signal; architecture supports it trivially |
-| Alembic migrations | `create_all()` on startup is appropriate for a dev/demo environment; production would use Alembic with versioned migrations |
-| E2E tests (Playwright/Cypress) | Setup cost (~45min) not justified for a time-boxed challenge; integration tests cover the same auth/validation boundaries |
-| Pagination & filtering | Out of scope for v1; RTK Query cache invalidation and URL params are the natural extension point |
-| Real auth provider (Auth0/Keycloak) | Seeded JWT is appropriate for this scope; an ADR for OAuth2 with an IdP is the production path |
+| Feature                             | Reason                                                                                                                                                                                           |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Update/Delete participant           | Deprioritized — adds ~30min for low evaluation signal; architecture supports it trivially                                                                                                        |
+| Alembic migrations                  | `create_all()` on startup is appropriate for a dev/demo environment; production would use Alembic with versioned migrations                                                                      |
+| E2E tests (Playwright/Cypress)      | Setup cost (~45min) not justified for a time-boxed challenge; integration tests cover the same auth/validation boundaries                                                                        |
+| Pagination & filtering              | Out of scope for v1; RTK Query cache invalidation and URL params are the natural extension point                                                                                                 |
+| Real auth provider (Auth0/Keycloak) | Seeded JWT is appropriate for this scope; an ADR for OAuth2 with an IdP is the production path                                                                                                   |
+| Pre-commit linting                  | Started to implement, but didn't have much time to add it universally for both FE and BE. Husky is installed only when Frontend deps are being installed, so no pre-commit validation until that |
 
 ---
 
@@ -170,17 +181,21 @@ Chart components (`@/components/charts/`) are the only consumers of Recharts. Pa
 2. **Update/Delete participant** — trivial to add given existing layer structure
 3. **Pagination + server-side filtering** — query params on `GET /api/participants`
 4. **E2E tests** — Playwright covering login → add participant → verify in table
-5. **Toast notifications** — success/error feedback on form submission (scaffolded in `AddParticipantDialogContainer`, not wired)
+5. **Toast notifications** — success/error feedback on form submission
 6. **Role-based access** — researcher vs admin roles, different route permissions
 7. **Observability** — structured JSON logs (loguru already in place), Sentry for frontend errors, health check endpoint (already exists at `/health`)
 8. **CI: Docker build job** — verify the compose stack builds cleanly on every PR
+9. **Pre-commit validation** – didn't have enough time to thoroughly implement it for both FE and BE
+10. **Storybook** – allows to develop/view UI components in isolation, sometimes helps when need to make a quick UI change, without necessarily updating BE
+11. **Telemetry** - gather not only errors, but also user interactions to see possible performance issues, e.g. long page loads, long rendering of particular components
+12. **Unit tests** - for current scope (no modifications of data), it's probably overkill, but when complex data state changes appear - it's good to have business logic covered with unit tests (redux slice, utils)
 
 ---
 
 ## Trade-offs
 
 - **SQLModel vs separate SQLAlchemy + Pydantic schemas** — SQLModel reduces boilerplate significantly for this model count. At scale (20+ models with complex relationships), separate schemas give more control.
-- **RTK Query vs React Query + Zustand** — RTK Query adds more boilerplate but is the right call if the app grows and needs complex cross-slice invalidation. For a 3-page app, React Query would be lighter.
+- **Redux Toolkit vs Zustand** — For 3 pages app with minimal changes to state Zustand probably would be a better choice, but if we are talking that it's a first revision, we would probably want to grow bigger, and being bound to Zustand would later require us to change it, thus spending time on refactoring/fixing related bugs. Picking the Redux Toolkit is a futureproof solution that allows later easily to add middleware such as Websocket and provides flexibility overall.  
 ---
 
 ## AI Tools Used
@@ -190,4 +205,5 @@ Claude (Anthropic) was used extensively for scaffolding:
 - Boilerplate generation for all layers (routes, services, repositories, RTK slices, components)
 - Test factory patterns and test case coverage planning
 
-All architecture decisions, layer boundaries, naming conventions, and trade-off reasoning are my own. Every line of generated code was reviewed and I can explain any part of the solution.
+All architecture decisions, layer boundaries, naming conventions, and trade-off reasoning are my own (can be checked in CLAUDE.md and corresponding `.claude/agents/*` files. 
+Every line of generated code was reviewed and I can explain any part of the solution.
