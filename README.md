@@ -109,6 +109,33 @@ curl -b cookies.txt -c cookies.txt -X POST http://localhost:8000/api/auth/logout
 
 ## Architecture
 
+```mermaid
+graph TD
+  subgraph Frontend ["Frontend (React)"]
+    Presentational[Presentational Component]
+    Container[Container Component]
+    RTK[RTK Query + Redux Toolkit]
+
+    Presentational --> Container
+    Container --> RTK
+  end
+
+  subgraph Backend ["Backend (FastAPI)"]
+    API[FastAPI Routes]
+    Service[Services Layer]
+    Repo[Repositories Layer]
+    DB[(PostgreSQL)]
+
+    RTK --> API
+    API --> Service
+    Service --> Repo
+    Repo --> DB
+  end
+
+  style Frontend fill:#f0f4f8,stroke:#2c3e50,stroke-width:2px
+  style Backend fill:#e8f0e8,stroke:#2c3e50,stroke-width:2px
+```
+
 ### Backend: Route → Service → Repository
 
 ```
@@ -121,16 +148,6 @@ services/       — business logic, orchestration, raises HTTP exceptions
 repositories/   — all DB access lives here exclusively; nothing else queries the DB
     ↓
 PostgreSQL
-```
-
-```mermaid
-graph TD
-  Presentation[Presentation Component] --> Container[Container Wrapper]
-  Container --> Redux_RTK[RTK Query]
-  Redux_RTK --> API[FastAPI]
-  API --> Service[Services Layer]
-  Service --> Repo[Repositories]
-  Repo --> DB[(PostgreSQL)]
 ```
 
 No route accesses the DB directly. No service imports SQLAlchemy directly. This makes services independently testable and the DB implementation swappable.
